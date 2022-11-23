@@ -3,6 +3,8 @@ from flask import *
 import mysql.connector
 from mysql.connector import errorcode
 from werkzeug.exceptions import HTTPException
+import mysql.connector.pooling
+
 
 
 app = Flask(__name__,
