@@ -2,8 +2,10 @@ from flask import Flask
 import json
 
 import mysql.connector
-import MySQLdb
 from mysql.connector import errorcode
+import mysql.connector.pooling
+
+
 
 
 app = Flask(__name__,
@@ -17,9 +19,9 @@ app.secret_key = "any string but secret"
 
 #### create connection pool ####
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'mysqlpw1!',
+    'host': 'ec2-54-227-42-22.compute-1.amazonaws.com',
+    'user': 'admin',
+    'password': 'Mysqlpw1!',
     'database': 'website',
     'port': 3306,
 }

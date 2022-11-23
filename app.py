@@ -17,9 +17,9 @@ app.secret_key = "any string but secret"
 
 #### create connection pool ####
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'mysqlpw1!',
+    'host': 'ec2-52-70-76-242.compute-1.amazonaws.com',
+    'user': 'admin',
+    'password': 'Mysqlpw1!',
     'database': 'website',
     'port': 3306,
 }
@@ -38,7 +38,6 @@ except mysql.connector.Error as err:
         print(err)
 
 cur = cnx.cursor(buffered=True)
-
 
 
 # handle error
@@ -60,11 +59,9 @@ def handle_exception(e):
 
 
 
-
-
+## APIs ##
 @app.route("/api/attractions")
 def attraction():
-
 
     keyword = request.args.get("keyword")
     page = request.args.get("page")
@@ -85,14 +82,13 @@ def attraction():
 
     else:
         rowFrom = pageInt*12
-        rowTo = (pageInt+1)*12
+        rowTo = 12
 
         if keyword is None:
             cur.execute(
                 "SELECT * FROM attraction limit %s, %s ", (rowFrom, rowTo))
         else:
             keyword = "%"+keyword+"%"
-            print(keyword)
             cur.execute("""SELECT * FROM attraction WHERE name LIKE %s OR CAT LIKE %s OR description LIKE %s OR address LIKE %s OR direction LIKE %s OR MRT LIKE %s limit %s, %s """,
                         (keyword, keyword, keyword, keyword, keyword, keyword, rowFrom, rowTo,))
 
@@ -132,12 +128,10 @@ def attraction():
 
 @app.route("/api/attraction/<id>")
 def attraction_with_id(id):
-    print("1111111")
 
     cur.execute("SELECT * FROM attraction WHERE ID= %s", (id,))
     data = cur.fetchone()
 
- 
     json = {
         "data": [
         ]}
@@ -172,20 +166,30 @@ def categories():
     cur.execute("SELECT DISTINCT CAT FROM attraction")
     data = cur.fetchall()
 
-
- 
     json = {
         "data":  [d[0] for d in data]
-        }
+    }
     return json
 
 
-@app.route("/")
-def index():
-    return render_template("index.html")
 
 
+# # Pages
+# @app.route("/")
+# def index():
+# 	return render_template("index.html")
+# @app.route("/attraction/<id>")
+# def attraction(id):
+# 	return render_template("attraction.html")
+# @app.route("/booking")
+# def booking():
+# 	return render_template("booking.html")
+# @app.route("/thankyou")
+# def thankyou():
+# 	return render_template("thankyou.html")
 
 
 if __name__ == '__main__':
-    app.run(port=3000)
+    # app.run(port=3000)
+    app.run(host="0.0.0.0", port=3000)
+
