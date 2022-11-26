@@ -25,6 +25,7 @@ db_config = {
     'database': 'website',
     'port': 3306,
 }
+
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
@@ -157,7 +158,6 @@ def attraction_with_id(id):
         "images": imagesList
     }
     json["data"].append(attraction)
-    print(data)
 
     return json
 
