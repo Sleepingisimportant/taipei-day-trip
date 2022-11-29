@@ -17,20 +17,14 @@ app.secret_key = "any string but secret"
 
 
 #### create connection pool ####
-# db_config = {
-#     'host': 'ec2-52-70-76-242.compute-1.amazonaws.com',
-#     'user': 'admin',
-#     'password': 'Mysqlpw1!',
-#     'database': 'website',
-#     'port': 3306,
-# }
 db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'mysqlpw1!',
+    'host': 'ec2-52-70-76-242.compute-1.amazonaws.com',
+    'user': 'admin',
+    'password': 'Mysqlpw1!',
     'database': 'website',
     'port': 3306,
 }
+
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
