@@ -6,9 +6,8 @@ from werkzeug.exceptions import HTTPException
 import mysql.connector.pooling
 
 
-
 app = Flask(__name__,
-            static_folder="public",
+            static_folder="static",
             static_url_path="/")
 
 app.config['JSON_AS_ASCII'] = False
@@ -18,14 +17,20 @@ app.secret_key = "any string but secret"
 
 
 #### create connection pool ####
+# db_config = {
+#     'host': 'ec2-52-70-76-242.compute-1.amazonaws.com',
+#     'user': 'admin',
+#     'password': 'Mysqlpw1!',
+#     'database': 'website',
+#     'port': 3306,
+# }
 db_config = {
-    'host': 'ec2-52-70-76-242.compute-1.amazonaws.com',
-    'user': 'admin',
-    'password': 'Mysqlpw1!',
+    'host': 'localhost',
+    'user': 'root',
+    'password': 'mysqlpw1!',
     'database': 'website',
     'port': 3306,
 }
-
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
@@ -59,7 +64,6 @@ def handle_exception(e):
 
     # now you're handling non-HTTP exceptions only
     return error_messsage("Internal Server Error."), 500
-
 
 
 ## APIs ##
@@ -174,12 +178,10 @@ def categories():
     return json
 
 
-
-
 # # Pages
-# @app.route("/")
-# def index():
-# 	return render_template("index.html")
+@app.route("/")
+def index():
+    return render_template("index.html")
 # @app.route("/attraction/<id>")
 # def attraction(id):
 # 	return render_template("attraction.html")
@@ -192,6 +194,5 @@ def categories():
 
 
 if __name__ == '__main__':
-    # app.run(port=3000)
-    app.run(host="0.0.0.0", port=3000)
-
+    app.run(port=3000)
+    # app.run(host="0.0.0.0", port=3000)
