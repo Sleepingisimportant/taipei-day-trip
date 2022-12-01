@@ -6,8 +6,6 @@ from mysql.connector import errorcode
 import mysql.connector.pooling
 
 
-
-
 app = Flask(__name__,
             static_folder="public",
             static_url_path="/")
@@ -19,7 +17,7 @@ app.secret_key = "any string but secret"
 
 #### create connection pool ####
 db_config = {
-    'host': 'ec2-54-227-42-22.compute-1.amazonaws.com',
+    'host': 'ec2-52-70-76-242.compute-1.amazonaws.com',
     'user': 'admin',
     'password': 'Mysqlpw1!',
     'database': 'website',
@@ -41,7 +39,7 @@ except mysql.connector.Error as err:
 
 cur = cnx.cursor(buffered=True)
 
-file_path = "data/taipei-attractions.json"
+file_path = "taipei-attractions.json"
 f = open(file_path, 'r')
 
 json_load_data = json.load(f)
@@ -75,7 +73,7 @@ for d in data:
     fileSplit = file.split("https")
     jpg = ".jpg"
     png = ".png"
-    http = "http"
+    http = "https"
     file_cleaned = ''.join(
         map(str, [http+x for x in fileSplit if jpg in x.lower() or png in x.lower()]))
 

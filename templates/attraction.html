@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>台北一日遊</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/attraction.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="{{url_for('static', filename='js/attraction.js')}}"></script>
+    <script type="text/javascript">
+        images = {{ images | tojson }};
+    </script>
+
+</head>
+
+<body>
+
+    <nav class='site-navigation' role='navigation'>
+        <div class="nav-body">
+            <div class="menu-title">
+                台北一日遊
+            </div>
+            <div id='menu' class="menu-content-container">
+                <ul>
+                    <li>預定行程</li>
+                    <li>登入/註冊</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="slideshow-and-booking">
+
+            <div class="slideshow-container">
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                <div class="dots">
+                </div>
+            </div>
+
+            <div class="imgTitle-and-booking">
+                <h3>{{name}}</h3>
+                <p class="body">{{category}} at {{mrt}}</span>
+
+                <div class="booking">
+                    <p class="body bold">訂購導覽行程</p>
+                    <br>
+                    <p class="body">
+                        以此景點為中心的一日行程，帶您探索城市角落故事
+                    </p>
+                    <br>
+                    <p class="body bold">選擇日期：</p>
+                    <input type="date" id="bookingDatePicker" name="bookingDatePicker">
+                    <br>
+                    <p class="body bold">選擇時間：</p>
+                    <input type="radio" name="bookingTime" id="booking-forenoon" checked="checked">
+                    <p class="body">上半天</p><input type="radio" name="bookingTime" id="booking-afternoon">
+                    <p class="body">下半天</p>
+                    <br>
+                    <p class="body bold">導覽費用：</p>
+                    <p id="booking-cost" class="body bold">新台幣 2000 元</p>
+                    <br><button class="bookingButton">開始預約行程</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="attraction-info">
+
+            <div class="attraction-info-description">
+                <p class="content">{{description}}</p>
+            </div>
+
+            <div class="attraction-info-address">
+                <p class="body bold">景點地址：</p>
+                <br>
+                <p class="content">{{address}}</p>
+            </div>
+
+            <div class="attraction-info-transportation">
+                <p class="body bold">交通方式：</p>
+                <br>
+                <p class="content">{{transport}} </p>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content"></div>
+        <span>COPYRIGHT ⓒ 2022 台北一日遊</span>
+    </footer>
+
+    </div>
+</body>
+
+</html>

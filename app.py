@@ -62,7 +62,7 @@ def handle_exception(e):
 
 ## APIs ##
 @app.route("/api/attractions")
-def attraction():
+def apiAttractions():
 
     keyword = request.args.get("keyword")
     page = request.args.get("page")
@@ -128,14 +128,14 @@ def attraction():
 
 
 @app.route("/api/attraction/<id>")
-def attraction_with_id(id):
+def apiAttractionId(id):
 
     cur.execute("SELECT * FROM attraction WHERE ID= %s", (id,))
     data = cur.fetchone()
 
     json = {
-        "data": [
-        ]}
+        "data": "",
+    }
 
     # clear non-image file
     imageFile = data[15]
@@ -155,7 +155,7 @@ def attraction_with_id(id):
         "lng": data[5],
         "images": imagesList
     }
-    json["data"].append(attraction)
+    json["data"] = attraction
 
     return json
 
@@ -176,9 +176,25 @@ def categories():
 @app.route("/")
 def index():
     return render_template("index.html")
-# @app.route("/attraction/<id>")
-# def attraction(id):
-# 	return render_template("attraction.html")
+
+
+@app.route("/attraction/<id>")
+def attraction(id):
+
+    fetchedData = apiAttractionId(id)
+    data = fetchedData['data']
+
+    address = data['address']
+    category = data['category']
+    description = data['description']
+    transport = data['transport']
+    name = data['name']
+    mrt = data['mrt']
+    images = data['images']
+    print(type(images))
+    print(images)
+
+    return render_template("attraction.html", address=address, category=category, description=description, transport=transport, name=name, mrt=mrt, images=images)
 # @app.route("/booking")
 # def booking():
 # 	return render_template("booking.html")
@@ -188,5 +204,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(port=3000)
-    # app.run(host="0.0.0.0", port=3000)
+    app.run(host="0.0.0.0", port=3000)
