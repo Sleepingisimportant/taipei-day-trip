@@ -6,15 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>台北一日遊</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/attraction.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-
+    <script src="{{url_for('static', filename='js/standard.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/attraction.js')}}"></script>
     <script type="text/javascript">
         images = {{ images | tojson }};
@@ -26,7 +21,7 @@
 
     <nav class='site-navigation' role='navigation'>
         <div class="nav-body">
-            <div class="menu-title">
+            <div id="menu-title" onclick="navigate_to_homepage()">
                 台北一日遊
             </div>
             <div id='menu' class="menu-content-container">
@@ -41,10 +36,10 @@
     <div class="main-content">
         <div class="slideshow-and-booking">
 
-            <div class="slideshow-container">
+            <div id="slideshow-container">
                 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
                 <a class="next" onclick="plusSlides(1)">&#10095;</a>
-                <div class="dots">
+                <div id="slideshow-dots">
                 </div>
             </div>
 
@@ -63,8 +58,8 @@
                     <input type="date" id="bookingDatePicker" name="bookingDatePicker">
                     <br>
                     <p class="body bold">選擇時間：</p>
-                    <input type="radio" name="bookingTime" id="booking-forenoon" checked="checked">
-                    <p class="body">上半天</p><input type="radio" name="bookingTime" id="booking-afternoon">
+                    <input type="radio" name="bookingTime" id="booking-forenoon" checked="checked" onchange="get_package_price(this.id)">
+                    <p class="body">上半天</p><input type="radio" name="bookingTime" id="booking-afternoon" onchange="get_package_price(this.id)">
                     <p class="body">下半天</p>
                     <br>
                     <p class="body bold">導覽費用：</p>
@@ -94,14 +89,12 @@
             </div>
 
         </div>
-    </div>
 
     <footer>
         <div class="footer-content"></div>
         <span>COPYRIGHT ⓒ 2022 台北一日遊</span>
     </footer>
 
-    </div>
 </body>
 
 </html>

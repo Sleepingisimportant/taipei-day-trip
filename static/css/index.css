@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
-@import url("styleGuide.css");
+@import url("style_guide.css");
 @import url("standard.css");
-
-
 
 
 
@@ -12,15 +10,12 @@
     position: relative;
     justify-content: center;
     align-items: center;
-
-
 }
 
 .banner img {
     object-fit: cover;
     width: 100%;
     height: 480px;
-
 }
 
 .banner-body {
@@ -28,14 +23,11 @@
     position: absolute;
     top: 200px;
     padding-left: 15px;
-
 }
 
 .banner-content {
     position: relative;
-
     color: white;
-
 }
 
 
@@ -44,21 +36,16 @@
 
 #banner-searchbar input {
     Width: 400px;
-    Height: 46px;
-
-
+    Height: 44px;
     font-weight: 700;
     Size: 16px;
     color: #757575;
-
-
     border-radius: 3px 0 0 3px;
     border-width: 0;
-    padding: 15px;
+    padding-left: 15px;
     margin: 0;
-
     box-shadow: 5px 3px 3px rgba(0, 0, 0, 0.1);
-    ;
+
 
 
 }
@@ -71,10 +58,9 @@
     border-radius: 0 3px 3px 0;
     border-width: 0;
     background-color: #448899;
-
     color: white;
     box-shadow: 5px 3px 3px rgba(0, 0, 0, 0.1);
-    ;
+
 
 }
 
@@ -102,12 +88,9 @@
     line-height: 20.27px;
     width: 120px;
     height: 40px;
-
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     flex: 1 0 21%;
     margin: 15px;
     position: relative;
@@ -116,13 +99,7 @@
 
 #banner-searchbar-category-list a:hover {
     background-color: rgba(0, 0, 0, 0.1);
-
 }
-
-
-
-
-
 
 
 
@@ -131,8 +108,6 @@
     overflow: hidden;
     padding: 50px auto 50px auto;
     margin: 30px auto 150px auto;
-
-
 }
 
 
@@ -143,11 +118,8 @@
     flex-wrap: wrap;
     margin-right: auto;
     margin-left: auto;
-
     justify-content: center;
     align-content: flex-start;
-
-
 }
 
 
@@ -159,12 +131,9 @@
     margin: 15px;
     position: relative;
     cursor: pointer;
-
-
 }
 
 .post-default img {
-
     border-radius: 5px 5px 0 0;
     position: absolute;
     width: 270px;
@@ -175,16 +144,11 @@
 }
 
 .post-default-title {
-
-
     position: absolute;
     width: 270px;
     height: 40px;
     left: 0px;
     bottom: 45px;
-
-    /* Additional Color/Black */
-
     background: rgba(0, 0, 0, 0.6);
 
 }
@@ -195,41 +159,24 @@
     height: 20px;
     margin: 10px;
     line-height: 5px;
-
-
-    /* Body - Bold 16(13.3) */
-
     font-style: normal;
     font-weight: 700;
     font-size: 16px;
     line-height: 13px;
-    /* or 83% */
-
     display: flex;
     align-items: center;
-
-    /* Additional Color/White */
-
     color: #FFFFFF;
 }
 
 
 .post-default-subtitle {
     padding: 10px;
-    /* gap: 4px; */
-
     position: absolute;
     width: 248px;
     left: 0px;
     top: 197px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 0 0 5px 5px;
-
-
-
-
-    /* Additional Color/White */
-
     background: #FFFFFF;
     text-align: center;
     display: flex;
@@ -240,29 +187,24 @@
 
 .post-default-subtitle a {
 
-
-    /* Body - Med 16(13.3) */
-
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
     line-height: 13px;
-    /* or 83% */
-
     display: flex;
     align-items: center;
     text-align: right;
-
-    /* Secondary Color/Gray 50 */
-
     color: #757575;
     display: inline-block;
 
-
-
 }
 
-
+#result-none-content {
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    padding: 30px;
+}
 
 
 
@@ -276,9 +218,9 @@
     }
 
 
-    
+
     .banner {
-        justify-content:flex-start;
+        justify-content: flex-start;
     }
 
     .banner-body {
@@ -297,6 +239,7 @@
 
 
     }
+
     .post-default {
         flex: 1 0 45%;
     }
@@ -312,9 +255,11 @@
 
 
     }
+
     .banner {
-        justify-content:center;
+        justify-content: center;
     }
+
     .banner-body {
         width: 300px;
         margin-left: 0px;
@@ -323,7 +268,11 @@
     }
 
     #banner-searchbar input {
-        width: 230px;
+        width: 210px;
+    }
+
+    #banner-searchbar button {
+        width: 50px;
     }
 
     .post-default {
