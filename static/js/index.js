@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 // check if a user hit the bottom of the page
 window.onscroll = function () {
 
+
   var totalPageHeight = document.body.scrollHeight;
 
   var scrollPoint = window.scrollY + window.innerHeight;
@@ -151,6 +152,7 @@ function populate_category_name(categoryName) {
 async function load_page() {
   isLoading = true;
 
+
   if (keyword == "") {
     url = 'api/attractions?page=' + nextPage
 
@@ -158,6 +160,7 @@ async function load_page() {
     url = 'api/attractions?page=' + nextPage + '&keyword=' + keyword
 
   }
+
   fetchedData = await api_fetch(url);
 
   data = fetchedData["data"];
@@ -195,7 +198,7 @@ async function api_fetch(url) {
 async function search_keyword() {
 
 
-  let keyword = document.getElementById('banner-searchbar-input').value;
+  keyword = document.getElementById('banner-searchbar-input').value;
 
   nextPage = 0;
 
@@ -224,6 +227,7 @@ async function search_keyword() {
     document.getElementById("main-content-default").appendChild(div);
 
   }
+
 };
 
 
