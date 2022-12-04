@@ -25,6 +25,7 @@ db_config = {
     'port': 3306,
 }
 
+
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
@@ -54,6 +55,7 @@ def error_messsage(message):
 def handle_exception(e):
     # pass through HTTP errors
     if isinstance(e, HTTPException):
+        print(e)
         return e
 
     # now you're handling non-HTTP exceptions only
@@ -172,7 +174,18 @@ def categories():
     return json
 
 
+# @app.route("/api/user", methods=['POST'])
+# def register_user():
+
+#     name = request.args.get("name")
+#     email = request.args.get("email")
+#     password = request.args.get("name")
+
+#     return json
+
 # # Pages
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -195,6 +208,8 @@ def attraction(id):
     print(images)
 
     return render_template("attraction.html", address=address, category=category, description=description, transport=transport, name=name, mrt=mrt, images=images)
+
+
 # @app.route("/booking")
 # def booking():
 # 	return render_template("booking.html")
@@ -204,4 +219,5 @@ def attraction(id):
 
 
 if __name__ == '__main__':
+
     app.run(host="0.0.0.0", port=3000)

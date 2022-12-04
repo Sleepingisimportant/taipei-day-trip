@@ -29,8 +29,9 @@ window.onscroll = function () {
 
   var scrollPoint = window.scrollY + window.innerHeight;
 
-  if (scrollPoint >= totalPageHeight) {
+  if (scrollPoint== totalPageHeight&nextPage!=null) {
     loadPage();
+
   }
 }
 
@@ -125,6 +126,7 @@ async function get_first_page() {
   nextPage = fetchedData["nextPage"];
 
   data = fetchedData["data"];
+
 
   fetch_posts(data, "main-content-default");
 
