@@ -38,8 +38,6 @@ window.onscroll = function () {
     if (nextPage != null && isLoading == false) {
       load_page();
 
-    } else {
-      keyword = ""
     }
   }
 }
