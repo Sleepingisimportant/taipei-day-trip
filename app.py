@@ -29,25 +29,13 @@ db_config = {
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
-try:
-    cnx = cnxpool.get_connection()
-
-except mysql.connector.Error as err:
-    if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-        print("Something is wrong with your user name or password")
-    elif err.errno == errorcode.ER_BAD_DB_ERROR:
-        print("Database does not exist")
-    else:
-        print(err)
-
-cur = cnx.cursor(buffered=True)
-
 
 # handle error
 def error_messsage(message):
     return {
         "error": True,
-        "message": message
+        "message": message,
+        
     }
 
 
@@ -55,8 +43,9 @@ def error_messsage(message):
 def handle_exception(e):
     # pass through HTTP errors
     if isinstance(e, HTTPException):
-        print(e)
+        print("httpe:"+e)
         return e
+    print(e)
 
     # now you're handling non-HTTP exceptions only
     return error_messsage("Internal Server Error."), 500
@@ -65,6 +54,9 @@ def handle_exception(e):
 ## APIs ##
 @app.route("/api/attractions")
 def apiAttractions():
+
+    cnx = cnxpool.get_connection()
+    cur = cnx.cursor(buffered=True)
 
     keyword = request.args.get("keyword")
     page = request.args.get("page")
@@ -97,6 +89,7 @@ def apiAttractions():
 
         data = cur.fetchall()
 
+        cnx.close()
         nextPage = None if len(data) < 12 else (pageInt+1)
 
         json = {
@@ -132,8 +125,12 @@ def apiAttractions():
 @app.route("/api/attraction/<id>")
 def apiAttractionId(id):
 
+    cnx = cnxpool.get_connection()
+    cur = cnx.cursor(buffered=True)
+
     cur.execute("SELECT * FROM attraction WHERE ID= %s", (id,))
     data = cur.fetchone()
+    cnx.close()
 
     json = {
         "data": "",
@@ -158,30 +155,24 @@ def apiAttractionId(id):
         "images": imagesList
     }
     json["data"] = attraction
-
     return json
 
 
 @app.route("/api/categories")
 def categories():
-
+    cnx = cnxpool.get_connection()
+    cur = cnx.cursor(buffered=True)
     cur.execute("SELECT DISTINCT CAT FROM attraction")
     data = cur.fetchall()
+    cnx.close()
 
     json = {
         "data":  [d[0] for d in data]
     }
+
     return json
 
 
-# @app.route("/api/user", methods=['POST'])
-# def register_user():
-
-#     name = request.args.get("name")
-#     email = request.args.get("email")
-#     password = request.args.get("name")
-
-#     return json
 
 # # Pages
 
@@ -204,21 +195,21 @@ def attraction(id):
     name = data['name']
     mrt = data['mrt']
     images = data['images']
-    print(type(images))
-    print(images)
 
     return render_template("attraction.html", address=address, category=category, description=description, transport=transport, name=name, mrt=mrt, images=images)
 
 
-# @app.route("/booking")
-# def booking():
-# 	return render_template("booking.html")
-# @app.route("/thankyou")
-# def thankyou():
-# 	return render_template("thankyou.html")
+@app.route("/booking")
+def booking():
+    return render_template("booking.html")
+
+
+@app.route("/thankyou")
+def thankyou():
+    return render_template("thankyou.html")
 
 
 if __name__ == '__main__':
-    # app.run(port=3000)
+    app.run(port=3000)
 
-    app.run(host="0.0.0.0", port=3000)
+    # app.run(host="0.0.0.0", port=3000)
