@@ -21,6 +21,10 @@ document.addEventListener("DOMContentLoaded", async function (event) {
     document.getElementById("authentication-registration-link").innerText = "";
     document.getElementById("authentication-registration-link").innerText = "登出";
     document.getElementById("authentication-registration-link").setAttribute("onClick", "popup_user_logout_box()");
+  }else{
+    document.getElementById("authentication-registration-link").innerText = "";
+    document.getElementById("authentication-registration-link").innerText = "登入/註冊";
+    document.getElementById("authentication-registration-link").setAttribute("onClick", "popup_user_login_box()");
   }
 
 });
