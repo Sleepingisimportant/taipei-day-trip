@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         categorylist.remove();
       }
     }
+
   });
 
 });
@@ -43,6 +44,19 @@ window.onscroll = function () {
   }
 }
 
+async function api_fetch(url) {
+  let fetchedData = await fetch(url, {
+    method: 'GET',
+  })
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(responseData);
+      return responseData;
+    })
+    .catch(error => console.warn(error));
+
+  return fetchedData
+}
 
 function clicked_searchbar_button() {
 
@@ -95,6 +109,8 @@ async function show_posts(data, appendedElementID) {
     if (emptybox == 2) {
       emptybox = 0;
     }
+  } else if (window.innerWidth < 666) {
+    emptybox = 0;
   }
 
   for (let i = 0; i < emptybox; i++) {
@@ -181,19 +197,7 @@ function searchbar_keydown_enter(e) {
   }
 }
 
-async function api_fetch(url) {
-  let fetchedData = await fetch(url, {
-    method: 'GET',
-  })
-    .then((response) => response.json())
-    .then((responseData) => {
-      console.log(responseData);
-      return responseData;
-    })
-    .catch(error => console.warn(error));
 
-  return fetchedData
-}
 
 async function search_keyword() {
 
@@ -229,6 +233,8 @@ async function search_keyword() {
   }
 
 };
+
+
 
 
 async function unfold_searchbar_category_list() {

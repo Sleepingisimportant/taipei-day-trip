@@ -1,9 +1,12 @@
 from flask import *
+# import werkzeug.exceptions
 
 import mysql.connector
-from mysql.connector import errorcode
-from werkzeug.exceptions import HTTPException
 import mysql.connector.pooling
+from functools import wraps
+import jwt
+from datetime import datetime, timedelta
+import time
 
 
 app = Flask(__name__,
@@ -13,7 +16,7 @@ app = Flask(__name__,
 app.config['JSON_AS_ASCII'] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-app.secret_key = "any string but secret"
+app.secret_key = "9e57f96152234a7d86453201e927cc1f"
 
 
 #### create connection pool ####
@@ -30,30 +33,38 @@ cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
 
+# success message
+def success_message():
+    return {
+        "ok": True,
+    }
+
 # handle error
+
+
 def error_messsage(message):
     return {
         "error": True,
         "message": message,
-        
     }
 
 
 @app.errorhandler(Exception)
 def handle_exception(e):
-    # pass through HTTP errors
-    if isinstance(e, HTTPException):
-        print("httpe:"+e)
-        return e
-    print(e)
-
+    # print(e)
     # now you're handling non-HTTP exceptions only
     return error_messsage("Internal Server Error."), 500
 
 
+# @app.errorhandler(werkzeug.exceptions.BadRequest)
+# def handle_bad_request(e):
+#     return  error_messsage("註冊失敗，重複的 Email 或其他原因"), 400
+
 ## APIs ##
+
+
 @app.route("/api/attractions")
-def apiAttractions():
+def api_attractions():
 
     cnx = cnxpool.get_connection()
     cur = cnx.cursor(buffered=True)
@@ -123,7 +134,7 @@ def apiAttractions():
 
 
 @app.route("/api/attraction/<id>")
-def apiAttractionId(id):
+def api_attraction_id(id):
 
     cnx = cnxpool.get_connection()
     cur = cnx.cursor(buffered=True)
@@ -155,11 +166,12 @@ def apiAttractionId(id):
         "images": imagesList
     }
     json["data"] = attraction
+
     return json
 
 
 @app.route("/api/categories")
-def categories():
+def api_categories():
     cnx = cnxpool.get_connection()
     cur = cnx.cursor(buffered=True)
     cur.execute("SELECT DISTINCT CAT FROM attraction")
@@ -173,9 +185,153 @@ def categories():
     return json
 
 
+@app.route("/api/user", methods=["POST"])
+def api_register_user():
 
-# # Pages
+    try:
+        cnx = cnxpool.get_connection()
+        cur = cnx.cursor(buffered=True)
 
+        request_params = request.get_json()
+        name = request_params["name"]
+        email = request_params["email"]
+        password = request_params["password"]
+
+        cur.execute("INSERT INTO MEMBER (name, email, password) VALUES (%s, %s, %s)",
+                    (name, email, password))
+        cnx.commit()
+
+        json = {
+            "ok": True
+        }
+        return json
+
+    except mysql.connector.Error:
+        return error_messsage("註冊失敗，重複的 Email 或其他原因"), 400
+
+    finally:
+        cnx.close()
+
+
+@app.route("/api/user/auth", methods=["PUT"])
+def api_login_user():
+    try:
+        cnx = cnxpool.get_connection()
+        cur = cnx.cursor(buffered=True)
+
+        request_params = request.get_json()
+        email = request_params["email"]
+        password = request_params["password"]
+
+        cur.execute(
+            "SELECT * FROM website.member WHERE email = %s AND password = %s", (email, password,))
+
+        row_count = cur.rowcount
+
+        if row_count == 0:
+            return error_messsage("帳號或密碼有誤")
+
+        else:
+            user = cur.fetchone()
+
+            token = jwt.encode({
+                "id": user[0],
+                "name": user[1],
+                'email': user[2],
+                'expiration': str(datetime.utcnow() + timedelta(seconds=604800))
+            },
+                app.secret_key, algorithm="HS256")
+
+            json = make_response(success_message())
+            print("setcookie")
+            json.set_cookie('token', token, max_age=604800, samesite=None, secure=False
+                            )
+            print("setcookiedone")
+
+            return json
+
+    except mysql.connector.Error:
+        return error_messsage("註冊失敗，重複的 Email 或其他原因"), 400
+
+    finally:
+        cnx.close()
+
+
+@app.route("/api/user/auth", methods=["DELETE"])
+def api_logout_user():
+
+    json = make_response(success_message())
+    json.delete_cookie('token')
+    print(request.cookies.get('token'))
+
+    return json
+
+
+# https://www.youtube.com/watch?v=_3NKBHYcpyg&ab_channel=BekBrace
+
+# def token_required(func):
+#     @wraps(func)
+#     def decorated(*args, **kwargs):
+#         token = request.cookies.get('token')
+
+#         if not token:
+#             data = {"data": None}
+#             return data
+
+#         try:
+
+#             data = jwt.decode(token, app.config['SECRET_KEY'])
+#             print("data:")
+#             print(data)
+#         # You can use the JWT errors in exception
+#         # except jwt.InvalidTokenError:
+#         #     return 'Invalid token. Please log in again.'
+#         except:
+#             # return jsonify({'message': 'Invalid token'}), 403
+#             data = {"data": None}
+#             return data
+#         return data
+#     return decorated
+
+# https://blog.51cto.com/hanzhichao/5325252
+@app.route("/api/user/auth", methods=["GET"])
+def api_verify_authentication():
+
+    token = request.cookies.get('token')
+
+    if token is None:
+        return {"data": None}
+
+    try:
+
+        _payload = jwt.decode(token, app.secret_key, algorithms="HS256")
+
+        print(_payload)
+        json = {
+            "data": {
+                "id": _payload["id"],
+                "name": _payload["name"],
+                "email": _payload["email"]
+            }
+        }
+       
+
+        return json
+
+    except jwt.InvalidTokenError as e:
+        print('jwt.InvalidTokenError')
+
+        print(e)
+
+        return {"data": None}
+    except jwt.PyJWTError as e:
+        print('jwt.PyJWTError')
+        print(e)
+        return {"data": None}
+
+
+
+# Pages
 
 @app.route("/")
 def index():
@@ -184,19 +340,7 @@ def index():
 
 @app.route("/attraction/<id>")
 def attraction(id):
-
-    fetchedData = apiAttractionId(id)
-    data = fetchedData['data']
-
-    address = data['address']
-    category = data['category']
-    description = data['description']
-    transport = data['transport']
-    name = data['name']
-    mrt = data['mrt']
-    images = data['images']
-
-    return render_template("attraction.html", address=address, category=category, description=description, transport=transport, name=name, mrt=mrt, images=images)
+    return render_template("attraction.html")
 
 
 @app.route("/booking")
@@ -210,4 +354,5 @@ def thankyou():
 
 
 if __name__ == '__main__':
+
     app.run(host="0.0.0.0", port=3000)

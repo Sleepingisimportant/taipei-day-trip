@@ -4,7 +4,7 @@
 
 
 
-.main-content {
+#main-content {
     width: 1200px;
     overflow: hidden;
     margin: 100px auto 150px auto;
@@ -232,19 +232,19 @@ input[type='radio']:checked:after {
 
 }
 
-.attraction-info-description {
+#attraction-info-description {
     margin-bottom: 30px;
 
 }
 
 
-.attraction-info-address {
+#attraction-info-address {
     margin-bottom: 30px;
 
 }
 
 
-.attraction-info-transportation {
+#attraction-info-transportation {
     margin-bottom: 30px;
 
 }
@@ -255,7 +255,7 @@ input[type='radio']:checked:after {
 @media screen and (max-width:1200px) {
 
      
-    .main-content {
+    #main-content {
         width: 90%;
         padding: auto;
     }
@@ -279,7 +279,7 @@ input[type='radio']:checked:after {
 
     }
 
-    .imgTitle-and-booking {
+    #imgTitle-and-booking {
         display: block;
         width: 500px;
 
@@ -306,7 +306,7 @@ input[type='radio']:checked:after {
         font-size: 14px;
     }
 
-    .main-content {
+    #main-content {
         width: 100%;
 
 

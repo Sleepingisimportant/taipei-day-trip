@@ -7,13 +7,13 @@
     <title>台北一日遊</title>
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/attraction.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/standard.css') }}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="{{url_for('static', filename='js/standard.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='js/attraction.js')}}"></script>
-    <script type="text/javascript">
-        images = {{ images | tojson }};
-    </script>
+    <script src="{{url_for('static', filename='js/attraction.js')}}"></script>
+   
 
 </head>
 
@@ -27,13 +27,13 @@
             <div id='menu' class="menu-content-container">
                 <ul>
                     <li>預定行程</li>
-                    <li>登入/註冊</li>
+                    <li onclick="popup_user_login_box()">登入/註冊</li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="main-content">
+    <div id="main-content">
         <div class="slideshow-and-booking">
 
             <div id="slideshow-container">
@@ -43,9 +43,9 @@
                 </div>
             </div>
 
-            <div class="imgTitle-and-booking">
-                <h3>{{name}}</h3>
-                <p class="body">{{category}} at {{mrt}}</span>
+            <div id="imgTitle-and-booking">
+                <!-- <h3>{{name}}</h3>
+                <p class="body">{{category}} at {{mrt}}</span> -->
 
                 <div class="booking">
                     <p class="body bold">訂購導覽行程</p>
@@ -74,20 +74,20 @@
 
         <div class="attraction-info">
 
-            <div class="attraction-info-description">
-                <p class="content">{{description}}</p>
+            <div id="attraction-info-description">
+                <!-- <p class="content">{{description}}</p> -->
             </div>
 
-            <div class="attraction-info-address">
+            <div id="attraction-info-address">
                 <p class="body bold">景點地址：</p>
                 <br>
-                <p class="content">{{address}}</p>
+                <!-- <p class="content">{{address}}</p> -->
             </div>
 
-            <div class="attraction-info-transportation">
+            <div id="attraction-info-transportation">
                 <p class="body bold">交通方式：</p>
                 <br>
-                <p class="content">{{transport}} </p>
+                <!-- <p class="content">{{transport}} </p> -->
             </div>
 
         </div>

@@ -12,7 +12,7 @@ app = Flask(__name__,
 
 app.config['JSON_AS_ASCII'] = False
 
-app.secret_key = "any string but secret"
+app.secret_key = "9e57f96152234a7d86453201e927cc1f"
 
 
 #### create connection pool ####

@@ -1,17 +1,54 @@
 let slideIndex = 1;
 
-document.addEventListener("DOMContentLoaded", function (event) {
-  
-  get_images();
-  
+document.addEventListener("DOMContentLoaded",  function (event) {
+  renderPage();
   showSlides(slideIndex);
 
 });
 
+function getAttractionId() {
+  const id = window.location.href.split("/").pop();
+  return !isNaN(id) ? id : null;
+}
+
+async function renderPage(){
+  const id = getAttractionId();
+  const url = '/api/attraction/' + id;
+
+  let fetchedData = await fetch(url, {
+    method: 'GET',
+  })
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(responseData);
+      return responseData;
+    })
+    .catch(error => console.warn(error));
 
 
 
-async function get_images() {
+  data = fetchedData["data"]
+  description = data["description"]
+  address = data["address"]
+  transport = data["transport"]
+  mrt = data["mrt"]
+  attractionName = data["name"]
+  category = data["category"]
+  images = data["images"]
+
+  imgTitleAndBooking = `   <h3> ` + attractionName + `  </h3>
+  <p class="body">` + category + `at ` + mrt + `</span> `;
+  document.getElementById('imgTitle-and-booking').insertAdjacentHTML("afterbegin", imgTitleAndBooking);
+
+
+  attractionInfoDescription = ` <p class="content">` + description + `</p>`
+  document.getElementById('attraction-info-description').insertAdjacentHTML("afterbegin", attractionInfoDescription);
+
+  attractionInfoAddress = ` <p class="content">` + address + `</p>`
+  document.getElementById('attraction-info-address').insertAdjacentHTML("beforeend", attractionInfoAddress);
+
+  attractionInfoTransportation = ` <p class="content">` + transport + `</p>`
+  document.getElementById('attraction-info-transportation').insertAdjacentHTML("beforeend", attractionInfoTransportation);
 
   for (let i = 0; i < images.length; i++) {
 
@@ -24,6 +61,21 @@ async function get_images() {
   }
 
 }
+
+
+// async function get_images() {
+
+//   for (let i = 0; i < images.length; i++) {
+
+//     slide = "<div class='mySlides fade'><img src='" + images[i] + "'></div>";
+//     document.getElementById('slideshow-container').insertAdjacentHTML("afterbegin", slide);
+
+//     dot = "<span class='dot' onclick='currentSlide(" + (i + 1) + ")'></span>";
+//     document.getElementById('slideshow-dots').insertAdjacentHTML("beforeend", dot);
+
+//   }
+
+// }
 
 
 function get_package_price(clicked_id) {

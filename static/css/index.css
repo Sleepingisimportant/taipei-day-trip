@@ -4,6 +4,7 @@
 
 
 
+
 .banner {
     width: 100%;
     display: flex;
@@ -103,7 +104,7 @@
 
 
 
-.main-content {
+#main-content {
     width: 1200px;
     overflow: hidden;
     padding: 50px auto 50px auto;
@@ -212,7 +213,7 @@
 
 
 @media screen and (max-width:1200px) {
-    .main-content {
+    #main-content {
         width: 90%;
         padding: 0;
     }
@@ -250,7 +251,7 @@
 @media screen and (max-width:600px) {
 
 
-    .main-content {
+    #main-content {
         width: 100%;
 
 
