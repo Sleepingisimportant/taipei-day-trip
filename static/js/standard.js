@@ -2,8 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", async function (event) {
 
-
-  const url = "api/user/auth";
+  const url = "/api/user/auth";
   let data = await fetch(url, {
     method: 'GET',
     headers: {
@@ -154,7 +153,7 @@ async function user_login() {
   password = document.getElementById('login-registration-box-password').value;
 
 
-  const url = "api/user/auth";
+  const url = "/api/user/auth";
   let data = await fetch(url, {
     method: 'PUT',
     headers: {
@@ -221,7 +220,7 @@ function delete_cookie(name) {
 
 
 async function user_logout() {
-  const url = "api/user/auth";
+  const url = "/api/user/auth";
   let data = await fetch(url, {
     method: 'DELETE',
     // withCredentials: false,

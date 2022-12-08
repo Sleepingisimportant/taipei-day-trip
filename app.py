@@ -32,6 +32,30 @@ cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
 
+
+
+
+# Pages
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+@app.route("/attraction/<id>")
+def attraction(id):
+    return render_template("attraction.html")
+
+
+@app.route("/booking")
+def booking():
+    return render_template("booking.html")
+
+
+@app.route("/thankyou")
+def thankyou():
+    return render_template("thankyou.html")
+
+
 # success message
 def success_message():
     return {
@@ -39,8 +63,6 @@ def success_message():
     }
 
 # handle error
-
-
 def error_messsage(message):
     return {
         "error": True,
@@ -55,13 +77,9 @@ def handle_exception(e):
     return error_messsage("Internal Server Error."), 500
 
 
-# @app.errorhandler(werkzeug.exceptions.BadRequest)
-# def handle_bad_request(e):
-#     return  error_messsage("註冊失敗，重複的 Email 或其他原因"), 400
+
 
 ## APIs ##
-
-
 @app.route("/api/attractions")
 def api_attractions():
 
@@ -262,40 +280,12 @@ def api_logout_user():
     json = make_response(success_message())
     json.delete_cookie('token')
     print(request.cookies.get('token'))
-
     return json
 
-
-# https://www.youtube.com/watch?v=_3NKBHYcpyg&ab_channel=BekBrace
-
-# def token_required(func):
-#     @wraps(func)
-#     def decorated(*args, **kwargs):
-#         token = request.cookies.get('token')
-
-#         if not token:
-#             data = {"data": None}
-#             return data
-
-#         try:
-
-#             data = jwt.decode(token, app.config['SECRET_KEY'])
-#             print("data:")
-#             print(data)
-#         # You can use the JWT errors in exception
-#         # except jwt.InvalidTokenError:
-#         #     return 'Invalid token. Please log in again.'
-#         except:
-#             # return jsonify({'message': 'Invalid token'}), 403
-#             data = {"data": None}
-#             return data
-#         return data
-#     return decorated
 
 # https://blog.51cto.com/hanzhichao/5325252
 @app.route("/api/user/auth", methods=["GET"])
 def api_verify_authentication():
-
     token = request.cookies.get('token')
 
     if token is None:
@@ -328,26 +318,6 @@ def api_verify_authentication():
         return {"data": None}
 
 
-# Pages
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
-@app.route("/attraction/<id>")
-def attraction(id):
-    return render_template("attraction.html")
-
-
-@app.route("/booking")
-def booking():
-    return render_template("booking.html")
-
-
-@app.route("/thankyou")
-def thankyou():
-    return render_template("thankyou.html")
 
 
 if __name__ == '__main__':

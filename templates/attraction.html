@@ -13,7 +13,7 @@
 
     <script src="{{url_for('static', filename='js/standard.js')}}"></script>
     <script src="{{url_for('static', filename='js/attraction.js')}}"></script>
-   
+
 
 </head>
 
@@ -44,25 +44,18 @@
             </div>
 
             <div id="imgTitle-and-booking">
-                <!-- <h3>{{name}}</h3>
-                <p class="body">{{category}} at {{mrt}}</span> -->
 
-                <div class="booking">
+                <div id="booking">
                     <p class="body bold">訂購導覽行程</p>
                     <br>
-                    <p class="body">
-                        以此景點為中心的一日行程，帶您探索城市角落故事
-                    </p>
+                    <p class="body">以此景點為中心的一日行程，帶您探索城市角落故事 </p>
                     <br>
                     <p class="body bold">選擇日期：</p>
                     <input type="date" id="bookingDatePicker" name="bookingDatePicker">
                     <br>
-                    <p class="body bold">選擇時間：</p>
-                    <input type="radio" name="bookingTime" id="booking-forenoon" checked="checked"
-                        onchange="get_package_price(this.id)">
-                    <p class="body">上半天</p><input type="radio" name="bookingTime" id="booking-afternoon"
-                        onchange="get_package_price(this.id)">
-                    <p class="body">下半天</p>
+                    <p class="body bold">選擇時間：</p><input type="radio" name="bookingTime" id="booking-forenoon" checked="checked"
+                        onchange="get_package_price(this.id)"><p class="body">上半天</p><input type="radio" name="bookingTime" id="booking-afternoon"
+                        onchange="get_package_price(this.id)"><p class="body">下半天</p>
                     <br>
                     <p class="body bold">導覽費用：</p>
                     <p id="booking-cost" class="body bold">新台幣 2000 元</p>

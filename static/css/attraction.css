@@ -133,22 +133,29 @@
 
 
 
-.imgTitle-and-booking {
+#imgTitle-and-booking {
     display: inline-block;
     vertical-align: top;
     width: 600px;
 
 }
 
-.booking {
+#booking {
     background: #E8E8E8;
     border-radius: 5px;
     padding: 10px 20px;
+    
 }
 
-.booking p {
+#booking p   {
     margin-top: 10px;
+    display: inline;
+    line-height: 50px;
 }
+
+
+
+
 
 
 
@@ -205,7 +212,7 @@ input[type='radio']:checked:after {
 
 }
 
-.booking button {
+#booking button {
     background-color: #448899;
     color: white;
     border-radius: 5px;
@@ -324,12 +331,12 @@ input[type='radio']:checked:after {
     }
 
 
-    .imgTitle-and-booking {
+    #imgTitle-and-booking {
         width: 90%;
 
     }
 
-    .booking p {
+    #booking p {
         margin-right: 4px;
     }
 

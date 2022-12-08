@@ -1,17 +1,19 @@
 let slideIndex = 1;
 
-document.addEventListener("DOMContentLoaded",  function (event) {
-  renderPage();
-  showSlides(slideIndex);
+document.addEventListener("DOMContentLoaded", function (event) {
+
+  renderPage()
+
 
 });
+
 
 function getAttractionId() {
   const id = window.location.href.split("/").pop();
   return !isNaN(id) ? id : null;
 }
 
-async function renderPage(){
+async function renderPage() {
   const id = getAttractionId();
   const url = '/api/attraction/' + id;
 
@@ -25,8 +27,6 @@ async function renderPage(){
     })
     .catch(error => console.warn(error));
 
-
-
   data = fetchedData["data"]
   description = data["description"]
   address = data["address"]
@@ -35,6 +35,8 @@ async function renderPage(){
   attractionName = data["name"]
   category = data["category"]
   images = data["images"]
+
+  await get_images(images);
 
   imgTitleAndBooking = `   <h3> ` + attractionName + `  </h3>
   <p class="body">` + category + `at ` + mrt + `</span> `;
@@ -50,6 +52,9 @@ async function renderPage(){
   attractionInfoTransportation = ` <p class="content">` + transport + `</p>`
   document.getElementById('attraction-info-transportation').insertAdjacentHTML("beforeend", attractionInfoTransportation);
 
+}
+
+async function get_images(images) {
   for (let i = 0; i < images.length; i++) {
 
     slide = "<div class='mySlides fade'><img src='" + images[i] + "'></div>";
@@ -59,7 +64,7 @@ async function renderPage(){
     document.getElementById('slideshow-dots').insertAdjacentHTML("beforeend", dot);
 
   }
-
+  showSlides(slideIndex);
 }
 
 
@@ -103,14 +108,18 @@ function showSlides(n) {
   let i;
   let slides = document.getElementsByClassName("mySlides");
   let dots = document.getElementsByClassName("dot");
+
   if (n > slides.length) { slideIndex = 1 }
   if (n < 1) { slideIndex = slides.length }
+  
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
   }
+
   for (i = 0; i < dots.length; i++) {
     dots[i].className = dots[i].className.replace(" active", "");
   }
+
   slides[slideIndex - 1].style.display = "block";
   dots[slideIndex - 1].className += " active";
 }
