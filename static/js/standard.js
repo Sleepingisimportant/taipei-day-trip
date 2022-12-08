@@ -209,12 +209,7 @@ function getCookie(cookieName) {
   return cookie[cookieName];
 }
 
-// function setCookie(cname, cvalue, exdays) {
-//   const d = new Date();
-//   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-//   let expires = "expires=" + d.toUTCString();
-//   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-// }
+
 
 function delete_cookie(name) {
   document.cookie = name + '=; Path=/; Max-Age=-99999999;';
@@ -227,7 +222,6 @@ async function user_logout() {
   const url = "/api/user/auth";
   let data = await fetch(url, {
     method: 'DELETE',
-    // withCredentials: false,
 
   })
     .then((response) => response.json())
@@ -238,17 +232,9 @@ async function user_logout() {
     .catch(error => console.warn(error));
 
 
-
-
   delete_cookie('token');
 
-  console.log(document.cookie)
-
-
   location.href = "/"
-
-
-
 
 }
 
@@ -270,21 +256,3 @@ function popup_user_logout_box() {
   disableScrolling();
 }
 
-// async function test() {
-//   const url = "api/user/auth";
-//   let data = await fetch(url, {
-//     method: 'GET',
-//     // body: JSON.stringify({
-//     //   token: getCookie('token')
-//     // })
-//   })
-//     .then((response) => response.json())
-//     .then((responseData) => {
-//       console.log(responseData);
-//       return responseData;
-//     })
-//     .catch(error => console.warn(error));
-
-//   console.log(data);
-
-// }
