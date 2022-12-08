@@ -1,5 +1,4 @@
 from flask import *
-# import werkzeug.exceptions
 
 import mysql.connector
 import mysql.connector.pooling
@@ -197,7 +196,7 @@ def api_register_user():
         email = request_params["email"]
         password = request_params["password"]
 
-        cur.execute("INSERT INTO MEMBER (name, email, password) VALUES (%s, %s, %s)",
+        cur.execute("INSERT INTO member (name, email, password) VALUES (%s, %s, %s)",
                     (name, email, password))
         cnx.commit()
 
@@ -314,7 +313,6 @@ def api_verify_authentication():
                 "email": _payload["email"]
             }
         }
-       
 
         return json
 
@@ -328,7 +326,6 @@ def api_verify_authentication():
         print('jwt.PyJWTError')
         print(e)
         return {"data": None}
-
 
 
 # Pages
