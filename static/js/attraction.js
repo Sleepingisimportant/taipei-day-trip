@@ -58,7 +58,7 @@ async function get_images(images) {
   for (let i = 0; i < images.length; i++) {
 
     slide = "<div class='mySlides fade'><img src='" + images[i] + "'></div>";
-    document.getElementById('slideshow-container').insertAdjacentHTML("afterbegin", slide);
+    document.getElementById('slideshow-container-image').insertAdjacentHTML("afterbegin", slide);
 
     dot = "<span class='dot' onclick='currentSlide(" + (i + 1) + ")'></span>";
     document.getElementById('slideshow-dots').insertAdjacentHTML("beforeend", dot);
@@ -68,19 +68,6 @@ async function get_images(images) {
 }
 
 
-// async function get_images() {
-
-//   for (let i = 0; i < images.length; i++) {
-
-//     slide = "<div class='mySlides fade'><img src='" + images[i] + "'></div>";
-//     document.getElementById('slideshow-container').insertAdjacentHTML("afterbegin", slide);
-
-//     dot = "<span class='dot' onclick='currentSlide(" + (i + 1) + ")'></span>";
-//     document.getElementById('slideshow-dots').insertAdjacentHTML("beforeend", dot);
-
-//   }
-
-// }
 
 
 function get_package_price(clicked_id) {

@@ -80,6 +80,8 @@ def handle_exception(e):
 
 
 ## APIs ##
+
+
 @app.route("/api/attractions")
 def api_attractions():
 
