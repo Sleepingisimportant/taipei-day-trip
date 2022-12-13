@@ -28,6 +28,7 @@ db_config = {
 }
 
 
+
 cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
@@ -323,5 +324,4 @@ def api_verify_authentication():
 
 
 if __name__ == '__main__':
-
     app.run(host="0.0.0.0", port=3000)
