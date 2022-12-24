@@ -1,21 +1,24 @@
 let slideIndex = 1;
+const attrId = getAttractionId();
+let price=2000;
+
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-  renderPage()
+  renderPage();
+  document.getElementById('bookingDatePicker').valueAsDate = new Date();
 
 
 });
 
 
 function getAttractionId() {
-  const id = window.location.href.split("/").pop();
-  return !isNaN(id) ? id : null;
+  const attrId = window.location.href.split("/").pop();
+  return !isNaN(attrId) ? attrId : null;
 }
 
 async function renderPage() {
-  const id = getAttractionId();
-  const url = '/api/attraction/' + id;
+  const url = '/api/attraction/' + attrId;
 
   let fetchedData = await fetch(url, {
     method: 'GET',
@@ -73,9 +76,12 @@ async function get_images(images) {
 function get_package_price(clicked_id) {
 
   if (clicked_id == "booking-forenoon") {
-    document.getElementById("booking-cost").textContent = "新台幣 2000 元";
+    document.getElementById("booking-cost").textContent = "2,000";
+    price= 2000;
   } else if (clicked_id == "booking-afternoon") {
-    document.getElementById("booking-cost").textContent = "新台幣 2500 元";
+    document.getElementById("booking-cost").textContent = "2,500";
+    price= 2500;
+
   }
 }
 
@@ -98,7 +104,7 @@ function showSlides(n) {
 
   if (n > slides.length) { slideIndex = 1 }
   if (n < 1) { slideIndex = slides.length }
-  
+
   for (i = 0; i < slides.length; i++) {
     slides[i].style.display = "none";
   }
@@ -109,4 +115,65 @@ function showSlides(n) {
 
   slides[slideIndex - 1].style.display = "block";
   dots[slideIndex - 1].className += " active";
+}
+
+
+async function confirm_booking() {
+
+  const url = "/api/user/auth";
+  let data_auth = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json ; charset=UTF-8'
+    }
+  })
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(responseData);
+      return responseData;
+    })
+    .catch(error => console.warn(error));
+
+  if (data_auth['data'] == null) {
+    popup_user_login_box("/booking");
+
+  } else {
+
+    date = document.getElementById('bookingDatePicker').value;
+    
+    if (document.getElementById('booking-forenoon').checked) {
+      time = 0;
+    } else {
+      time = 1;
+    };
+
+
+    const url = "/api/booking";
+    let data = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json ; charset=UTF-8'
+      },
+      body: JSON.stringify({
+        memberId: data_auth['data']['id'],
+        attractionId: attrId,
+        date: date,
+        time: time,
+        price: price,
+      })
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData);
+        return responseData;
+      })
+      .catch(error => console.warn(error));
+
+      if(data.hasOwnProperty("ok")){
+        location.href = "/booking";
+      }else{
+        //to be added
+      }
+
+  }
 }

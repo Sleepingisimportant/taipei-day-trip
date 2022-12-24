@@ -33,9 +33,6 @@ cnxpool = mysql.connector.pooling.MySQLConnectionPool(
     pool_name='website_dbp', pool_size=20, pool_reset_session=True, **db_config)
 
 
-
-
-
 # Pages
 @app.route("/")
 def index():
@@ -64,6 +61,8 @@ def success_message():
     }
 
 # handle error
+
+
 def error_messsage(message):
     return {
         "error": True,
@@ -73,17 +72,16 @@ def error_messsage(message):
 
 @app.errorhandler(Exception)
 def handle_exception(e):
-    # print(e)
+    print("error:")
+    print(e)
     # now you're handling non-HTTP exceptions only
     return error_messsage("Internal Server Error."), 500
-
-
 
 
 ## APIs ##
 
 
-@app.route("/api/attractions")
+@app.route("/api/attractions", methods=["GET"])
 def api_attractions():
 
     cnx = cnxpool.get_connection()
@@ -153,7 +151,7 @@ def api_attractions():
         return json
 
 
-@app.route("/api/attraction/<id>")
+@app.route("/api/attraction/<id>", methods=["GET"])
 def api_attraction_id(id):
 
     cnx = cnxpool.get_connection()
@@ -221,10 +219,7 @@ def api_register_user():
                     (name, email, password))
         cnx.commit()
 
-        json = {
-            "ok": True
-        }
-        return json
+        return success_message()
 
     except mysql.connector.Error:
         return error_messsage("註冊失敗，重複的 Email 或其他原因"), 400
@@ -236,6 +231,7 @@ def api_register_user():
 @app.route("/api/user/auth", methods=["PUT"])
 def api_login_user():
     try:
+
         cnx = cnxpool.get_connection()
         cur = cnx.cursor(buffered=True)
 
@@ -263,10 +259,8 @@ def api_login_user():
                 app.secret_key, algorithm="HS256")
 
             json = make_response(success_message())
-            print("setcookie")
             json.set_cookie('token', token, max_age=604800, samesite=None, secure=False
                             )
-            print("setcookiedone")
 
             return json
 
@@ -282,7 +276,6 @@ def api_logout_user():
 
     json = make_response(success_message())
     json.delete_cookie('token')
-    print(request.cookies.get('token'))
     return json
 
 
@@ -298,7 +291,6 @@ def api_verify_authentication():
 
         _payload = jwt.decode(token, app.secret_key, algorithms="HS256")
 
-        print(_payload)
         json = {
             "data": {
                 "id": _payload["id"],
@@ -321,6 +313,105 @@ def api_verify_authentication():
         return {"data": None}
 
 
+@app.route("/api/booking", methods=["POST"])
+def api_create_booking():
+    try:
+        cnx = cnxpool.get_connection()
+        cur = cnx.cursor(buffered=True)
+
+        request_params = request.get_json()
+
+        memberId = request_params["memberId"]
+        attractionId = request_params["attractionId"]
+        booking_date = request_params["date"]
+        booking_time = request_params["time"]
+        price = request_params["price"]
+
+        cur.execute("INSERT INTO booking (member_id, attraction_id,booking_date,booking_time,price) VALUES (%s, %s, %s, %s, %s)",
+                    (memberId, attractionId, booking_date, booking_time, price))
+        cnx.commit()
+
+        return success_message()
+
+    finally:
+        cnx.close()
+
+
+@app.route("/api/booking", methods=["GET"])
+def api_get_unconfirmed_booking():
+    token = request.cookies.get('token')
+    if token is None:
+        return error_messsage("請先登入")
+    try:
+
+        _payload = jwt.decode(token, app.secret_key, algorithms="HS256")
+
+        memberId = int(_payload["id"])
+
+        cnx = cnxpool.get_connection()
+        cur = cnx.cursor(buffered=True)
+
+        cur.execute(
+            "SELECT  booking.booking_date, booking_time, booking.price, attraction.id, attraction.name, attraction.address, attraction.file, booking.booking_Id FROM booking INNER JOIN attraction ON booking.attraction_id=attraction.ID WHERE member_id= %s AND booking_status=%s;", (memberId, 0))
+        data = cur.fetchall()
+        cnx.close()
+
+        json = {
+            "data": [
+            ]}
+
+        for d in data:
+            images = d[6].split("https")
+            image="https"+images[1]
+
+            booking = {
+                "attraction": {
+                    "id": d[3],
+                    "name": d[4],
+                    "address": d[5],
+                    "image":image,
+                },
+                "date": str(d[0]),
+                "time": d[1],
+                "price": d[2], 
+                "bookingId":d[7],               
+            }
+            json["data"].append(booking)
+
+        return json
+
+    except jwt.InvalidTokenError as e:
+        print('jwt.InvalidTokenError')
+
+        print(e)
+
+        return {"data": None}
+    except jwt.PyJWTError as e:
+        print('jwt.PyJWTError')
+        print(e)
+        return {"data": None}
+
+
+@app.route("/api/booking", methods=["DELETE"])
+def api_delete_booking():
+    try:
+        cnx = cnxpool.get_connection()
+        cur = cnx.cursor(buffered=True)
+
+        request_params = request.get_json()
+        bookingId = request_params["bookingId"]
+
+        cur.execute(
+            "DELETE FROM booking WHERE booking_id= %s;", ( bookingId,))
+        cnx.commit()
+
+        return success_message()
+
+    except mysql.connector.Error:
+        return error_messsage("刪除失敗，請再試一次。"), 400
+
+    finally:
+        cnx.close()
 
 
 if __name__ == '__main__':

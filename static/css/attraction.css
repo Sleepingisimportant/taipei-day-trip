@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
 @import url("style_guide.css");
 @import url("standard.css");
 
@@ -38,11 +37,6 @@
 }
 
 #slideshow-container-image img{
-    /* width: 540px;
-    border-radius: 5px;
-    position: absolute;
-    left: 0px;
-    top: 0px; */
    
     width: 540px;
     height: 425px;
@@ -233,27 +227,9 @@ input[type='radio']:checked:after {
 
 }
 
-#booking button {
-    background-color: #448899;
-    color: white;
-    border-radius: 5px;
-    border-width: 0;
-    width: 154px;
-    height: 36px;
-    font-family: 'Noto Sans TC';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19px;
-    padding: 0px;
-    margin-top: 20px;
-    margin-bottom: 20px;
 
-}
 
-.attraction-info {
 
-    margin-top: 100px;
-}
 
 .attraction-info p {
     margin-right: 0px;
@@ -316,7 +292,6 @@ input[type='radio']:checked:after {
     #imgTitle-and-booking {
         display: block;
         width: 500px;
-
         margin: 50px auto auto auto;
 
     }
@@ -336,9 +311,7 @@ input[type='radio']:checked:after {
 
 
  
-    .menu-content-container {
-        font-size: 14px;
-    }
+   
 
     #main-content {
         width: 100%;

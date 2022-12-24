@@ -25,6 +25,7 @@ h3 {
     line-height: 24px;
     margin-top: 0;
     margin-bottom: 15px;
+    
 
 }
 .btn {
@@ -33,12 +34,14 @@ h3 {
     margin-top: 0;
     margin-bottom: 15px;
 
+
 }
 .content {
     font-size: 16px;
     line-height: auto;
     margin-top: 0;
     margin-bottom: 15px;
+
 }
 
 .body {
@@ -59,8 +62,12 @@ h3 {
 .bold{
     font-weight: bold;
 
+
+
 }
 
 .medium{
     font-weight: medium;
+
+
 }

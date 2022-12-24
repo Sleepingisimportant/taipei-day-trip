@@ -16,22 +16,55 @@ document.addEventListener("DOMContentLoaded", async function (event) {
     })
     .catch(error => console.warn(error));
 
-
   if (data['data'] != null) {
     document.getElementById("authentication-registration-link").innerText = "";
     document.getElementById("authentication-registration-link").innerText = "登出";
     document.getElementById("authentication-registration-link").setAttribute("onClick", "popup_user_logout_box()");
-  }else{
+  } else {
     document.getElementById("authentication-registration-link").innerText = "";
     document.getElementById("authentication-registration-link").innerText = "登入/註冊";
     document.getElementById("authentication-registration-link").setAttribute("onClick", "popup_user_login_box()");
   }
 
+
+
+
 });
 
 
-function navigate_to_homepage() {
+
+async function api_get_user_auth() {
+  const url = "/api/user/auth";
+  let data = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json ; charset=UTF-8'
+    }
+  })
+    .then((response) => response.json())
+    .then((responseData) => {
+      console.log(responseData);
+      return responseData;
+    })
+    .catch(error => console.warn(error));
+
+  return data;
+}
+
+function nav_to_homepage() {
   window.location.replace("/");
+}
+
+async function nav_to_booking(bookingID) {
+  data = await api_get_user_auth();
+
+  if (data['data'] == null) {
+      popup_user_login_box(toPageLocation='/booking');
+  } else {
+   window.location.replace("/booking");
+
+  }
+
 }
 
 document.addEventListener('click', (e) => {
@@ -56,16 +89,16 @@ function enableScrolling() {
   window.onscroll = function () { };
 }
 
-function popup_user_login_box() {
+function popup_user_login_box(toPageLocation="/") {
+
   if (document.getElementById("dimmed-background")) {
     document.getElementById("dimmed-background").remove();
-
   }
 
   insertHTML = `  <div id="dimmed-background">
   <div id="login-registration-box">
   <div id="icon-close">&times;</div>
-    <form  onsubmit="user_login();return false">
+    <form  onsubmit="user_login('`+toPageLocation+`');return false">
       <h3>登入會員帳號</h3>
       <input type="text" class="body" name="email" id="login-registration-box-email" placeholder="輸入電子信箱" required><br>
       <input type="password" class="body" name="password" id="login-registration-box-password" placeholder="輸入密碼" required><br>
@@ -75,6 +108,7 @@ function popup_user_login_box() {
   </div>
   </div>
 `;
+
 
   document.body.insertAdjacentHTML("afterbegin", insertHTML);
   disableScrolling();
@@ -152,10 +186,9 @@ async function user_registration() {
 
 }
 
-async function user_login() {
+async function user_login(toPageLocation) {
   email = document.getElementById('login-registration-box-email').value;
   password = document.getElementById('login-registration-box-password').value;
-
 
   const url = "/api/user/auth";
   let data = await fetch(url, {
@@ -176,13 +209,14 @@ async function user_login() {
     })
     .catch(error => console.warn(error));
 
+    console.log(data);
+
   if (document.getElementById("login-registration-result-message")) {
     document.getElementById("login-registration-result-message").remove()
   }
 
   if (data.hasOwnProperty("ok")) {
-
-    location.href = "/"
+    location.href = toPageLocation;
 
   } else {
 
@@ -255,4 +289,6 @@ function popup_user_logout_box() {
   document.body.insertAdjacentHTML("afterbegin", insertHTML);
   disableScrolling();
 }
+
+
 
