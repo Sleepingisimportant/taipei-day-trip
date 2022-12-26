@@ -1,0 +1,155 @@
+@import url("style_guide.css");
+@import url("standard.css");
+
+
+input {
+    border: 1px solid #E8E8E8;
+    border-radius: 5px;
+    width: 200px;
+    height: 38px;
+}
+
+#main-content {
+    width: 1200px;
+    overflow: hidden;
+    margin: 100px auto 150px auto;
+    justify-content: space-between;
+}
+
+#booking-section {
+    width: 100%;
+}
+
+
+
+
+#booking-section-image {
+    width: 320px;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    float: left;
+    margin: 20px 20px 20px 0px;
+    overflow: hidden;
+
+ 
+
+}
+
+#booking-section-image img {
+
+    width: 320px;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+#booking-section-info {
+    vertical-align: top;
+    margin: 20px;
+    color: #666666;
+    float: left;
+}
+
+#booking-section-info-title {
+    color: #448899;
+    margin-bottom: 20px;
+    width: calc(100%-30px);
+    display: inline-block;
+
+}
+
+#booking-section-delete {
+    vertical-align: top;
+    margin: 20px 50px 20px 20px;
+    /* margin-left: auto;
+    margin-right: 0; */
+    float: right;
+
+
+
+}
+
+#booking-section-delete i {
+    font-size: 30px !important;
+    vertical-align: middle;
+    color: grey;
+    cursor: pointer;
+
+
+}
+
+
+.section-title {
+    margin-bottom: 20px;
+}
+
+
+#confirmation-section {
+    float: right;
+}
+
+
+
+@media screen and (max-width:1300px) {
+    #main-content {
+
+        width: 90%;
+        padding: auto;
+
+    }
+
+}
+
+@media screen and (max-width:830px) {
+  
+    #booking-welcome-message{
+        width: 100%;
+        margin-bottom: 30px;
+        display: block;
+
+    }
+
+    #booking-section {
+        justify-content: center;
+        display: block;
+        width: 100%;
+
+
+    }
+
+    #booking-section-image {
+        float: none;
+        display: block;
+        width: 100%;
+        height: auto;
+        margin: auto;
+    }
+   
+
+
+
+    #booking-section-image img {
+
+        width: 100%;
+        height: auto;
+        margin: 0;
+
+    }
+
+    #booking-section-info {
+        float: none;
+        display: block;
+        margin: 30px 0 0 0 ;
+
+        width: 500px;
+
+    }
+
+    #booking-section-delete {
+        display: block;
+        margin: 0px 0px 40px 20px;
+
+
+    }
+}

@@ -1,3 +1,74 @@
+{% extends 'base.html' %}
+{% block cssFiles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/attraction.css') }}">
+{% endblock %}
+
+
+
+
+{% block jsFiles %}
+<script src="{{url_for('static', filename='js/attraction.js')}}"></script>
+{% endblock %}
+
+{% block mainContent %}
+<div id="main-content">
+    <div class="slideshow-and-booking">
+
+        <div id="slideshow-container">
+            <div id="slideshow-container-image">
+            </div>
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            <div id="slideshow-dots">
+            </div>
+        </div>
+
+        <div id="imgTitle-and-booking">
+
+            <div id="booking">
+                <p class="body bold">訂購導覽行程</p>
+                <br>
+                <p class="body">以此景點為中心的一日行程，帶您探索城市角落故事 </p>
+                <br>
+                <form onsubmit="confirm_booking();return false">
+
+                    <p class="body bold">選擇日期：</p>
+                    <input type="date" id="bookingDatePicker" name="bookingDatePicker" required>
+                    <br>
+                    <p class="body bold">選擇時間：</p><input type="radio" name="bookingTime" id="booking-forenoon"
+                        checked="checked" onchange="get_package_price(this.id)">
+                    <p class="body">上半天</p><input type="radio" name="bookingTime" id="booking-afternoon"
+                        onchange="get_package_price(this.id)">
+                    <p class="body">下半天</p>
+                    <br>
+                    <p class="body bold">導覽費用：</p>
+                    <p class="body">新台幣 <span id="booking-cost" class="body">2,000</span>元</p>
+                    <br><button id="booking-button" class="btn">開始預約行程</button>
+                    <form>
+            </div>
+
+        </div>
+    </div>
+
+    <hr>
+    <div class="attraction-info">
+
+        <div id="attraction-info-description">
+        </div>
+
+        <div id="attraction-info-address">
+            <p class="body bold">景點地址：</p>
+            <br>
+        </div>
+
+        <div id="attraction-info-transportation">
+            <p class="body bold">交通方式：</p>
+            <br>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,7 +98,7 @@
             <div id='menu' class="menu-content-container">
                 <ul>
                     <li>預定行程</li>
-                    <li id="authentication-registration-link" onclick="popup_user_login_box()">   </li>
+                    <li id="authentication-registration-link" onclick="popup_user_login_box()"> </li>
                 </ul>
             </div>
         </div>
@@ -37,8 +108,8 @@
         <div class="slideshow-and-booking">
 
             <div id="slideshow-container">
-            <div id="slideshow-container-image">
-            </div>
+                <div id="slideshow-container-image">
+                </div>
                 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
                 <a class="next" onclick="plusSlides(1)">&#10095;</a>
                 <div id="slideshow-dots">
@@ -55,9 +126,11 @@
                     <p class="body bold">選擇日期：</p>
                     <input type="date" id="bookingDatePicker" name="bookingDatePicker">
                     <br>
-                    <p class="body bold">選擇時間：</p><input type="radio" name="bookingTime" id="booking-forenoon" checked="checked"
-                        onchange="get_package_price(this.id)"><p class="body">上半天</p><input type="radio" name="bookingTime" id="booking-afternoon"
-                        onchange="get_package_price(this.id)"><p class="body">下半天</p>
+                    <p class="body bold">選擇時間：</p><input type="radio" name="bookingTime" id="booking-forenoon"
+                        checked="checked" onchange="get_package_price(this.id)">
+                    <p class="body">上半天</p><input type="radio" name="bookingTime" id="booking-afternoon"
+                        onchange="get_package_price(this.id)">
+                    <p class="body">下半天</p>
                     <br>
                     <p class="body bold">導覽費用：</p>
                     <p id="booking-cost" class="body bold">新台幣 2000 元</p>
