@@ -1,12 +1,14 @@
 from flask import *
-
+import requests
 import mysql.connector
 import mysql.connector.pooling
 from functools import wraps
 import jwt
 from datetime import datetime, timedelta
-import time
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 app = Flask(__name__,
             static_folder="static",
@@ -15,17 +17,18 @@ app = Flask(__name__,
 app.config['JSON_AS_ASCII'] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-app.secret_key = "9e57f96152234a7d86453201e927cc1f"
+app.secret_key = os.getenv('appSecretKey')
 
 
 #### create connection pool ####
 db_config = {
     'host': 'ec2-52-70-76-242.compute-1.amazonaws.com',
     'user': 'admin',
-    'password': 'Mysqlpw1!',
-    'database': 'website',
+    'password': os.getenv('password'),
+    'database': os.getenv('database'),
     'port': 3306,
 }
+
 
 
 
@@ -362,19 +365,19 @@ def api_get_unconfirmed_booking():
 
         for d in data:
             images = d[6].split("https")
-            image="https"+images[1]
+            image = "https"+images[1]
 
             booking = {
                 "attraction": {
                     "id": d[3],
                     "name": d[4],
                     "address": d[5],
-                    "image":image,
+                    "image": image,
                 },
                 "date": str(d[0]),
                 "time": d[1],
-                "price": d[2], 
-                "bookingId":d[7],               
+                "price": d[2],
+                "bookingId": d[7],
             }
             json["data"].append(booking)
 
@@ -402,13 +405,65 @@ def api_delete_booking():
         bookingId = request_params["bookingId"]
 
         cur.execute(
-            "DELETE FROM booking WHERE booking_id= %s;", ( bookingId,))
+            "DELETE FROM booking WHERE booking_id= %s;", (bookingId,))
         cnx.commit()
 
         return success_message()
 
     except mysql.connector.Error:
         return error_messsage("刪除失敗，請再試一次。"), 400
+
+    finally:
+        cnx.close()
+
+
+@app.route("/api/orders", methods=["POST"])
+def api_confirm_booking():
+
+    token = request.cookies.get('token')
+    if token is None:
+        return error_messsage("請先登入")
+    try:
+        _payload = jwt.decode(token, app.secret_key, algorithms="HS256")
+        memberId = int(_payload["id"])
+
+        cnx = cnxpool.get_connection()
+        cur = cnx.cursor(buffered=True)
+
+        partnerKey = os.getenv('partnerKey')
+
+
+        json = {
+            "prime": request.json["prime"],
+            "partner_key": partnerKey,
+            "merchant_id": "wehelp2022_CTBC",
+            "details": "TapPay Test",
+            "amount": int(request.json["totalPrice"]),
+            "cardholder": request.json["cardholder"],
+            "remember": True,
+            "order_number": datetime.now().strftime('%Y%m%d%H%M%S'),
+            "bank_transaction_id": datetime.now().strftime('%Y%m%d%H%M%S')
+        }
+
+        headers = {
+            "Content-Type": "application/json",
+            "x-api-key": partnerKey,
+        }
+
+        tapPayResponese = requests.post(
+            'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime', json=json, headers=headers, timeout=10)
+
+        tapPayData = tapPayResponese.json()
+        print(tapPayData)
+        
+        if tapPayData["msg"] == 'Success':
+            cur.execute(
+                "UPDATE booking SET booking_status=1, contact_name= %s, contact_email= %s, contact_phone= %s, order_number= %s, bank_transaction_id= %s  WHERE member_id= %s AND booking_status=0;", (request.json["cardholder"]["name"],request.json["cardholder"]["email"],request.json["cardholder"]["phone_number"],tapPayData["order_number"],tapPayData["bank_transaction_id"],memberId))
+            cnx.commit()
+            return jsonify({"ok": True, "orderNumber": tapPayData["order_number"]})
+        else:
+            err_msg="尚未付款成功，請重新再試一次。"
+            return error_messsage(err_msg)
 
     finally:
         cnx.close()

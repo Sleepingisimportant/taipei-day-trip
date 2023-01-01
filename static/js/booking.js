@@ -1,4 +1,5 @@
 
+
 document.addEventListener("DOMContentLoaded", async function (event) {
     const url = "/api/user/auth";
     let auth_data = await fetch(url, {
@@ -52,33 +53,36 @@ document.addEventListener("DOMContentLoaded", async function (event) {
 
             </div>
             <div id="contact-section">
+
                 <div class="section-title">
                     <div class="button bold">您的聯絡資訊</div>
                 </div>
+                <form id="contact-form">
                 <p class="body ">聯絡姓名：</p>
-                <input class="body " type="text"> <br>
-                <p class="body ">聯絡信箱：</p>
-                <input class="body " type="email"> <br>
-                <p class="body ">手機號碼：</p>
-                <input class="body " type="text"> <br>
+                <input class="body " type="text" name="name" required> <br>
+                <p class="body " type="email">聯絡信箱：</p>
+                <input class="body " type="email" name="email" required> <br>
+                <p class="body " >手機號碼：</p>
+                <input class="body " type="text" name="phone_number" required> <br>  
+                </form>
                 <p class="body bold">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</p>
-        
+                
             </div>
             <hr>
             <div id="payment-section">
                 <div class="section-title">
                     <div class="button bold">信用卡付款資訊</div>
                 </div>
-                <p class="body ">卡片號碼：</p>
-                <input class="body " type="text"> <br>
+                <p class="body" >卡片號碼：</p>
+                <div class="tpfield" id="card-number"></div><br>
                 <p class="body ">過期時間：</p>
-                <input class="body " type="email"> <br>
+                <div class="tpfield body" id="card-expiration-date"></div><br>
                 <p class="body ">驗證密碼：</p>
-                <input class="body " type="text"> <br>
-            </div>
+                <div class="tpfield body" id="card-ccv"></div><br>
+                </div>
             <hr>
             <div id="confirmation-section">
-                <br><button id="bookng-button" class="btn"><span>確認訂購並付款</span></button>
+                <br><button id="booking-button" class="btn"><span>確認訂購並付款</span></button>
             </div>`
             document.getElementById("main-content").insertAdjacentHTML("afterbegin", insertBookingInfo);
 
@@ -133,17 +137,35 @@ document.addEventListener("DOMContentLoaded", async function (event) {
                 totalPrice += bookingPrice;
             }
 
-            insertTotalPrice = `<p id="total-price" class="body bold">總價：新台幣 ` + totalPrice + ` 元</p>`;
+            insertTotalPrice = `<p class="body bold">總價：新台幣 <scan class="body bold" id="total-price" >` + totalPrice + `</scan> 元</p>`;
 
             document.getElementById("confirmation-section").insertAdjacentHTML("afterbegin", insertTotalPrice);
         }
         document.getElementById('welcome-username').innerText = auth_data['data']['name'];
 
 
+        if (document.getElementById("booking-button") != null) {
+            addTapPayScript(() => {
+                setupSdk();
+                setupCard();
+                cardOnUpdate();
+                confirmButtonHandler();
+            });
+        }
+
+
 
     }
-})
+});
 
+function addTapPayScript(callback) {
+    const script = document.createElement('script');
+
+    script.src = "https://js.tappaysdk.com/sdk/tpdirect/v5.14.0";
+    script.async = true;
+    script.addEventListener('load', callback);
+    document.body.appendChild(script);
+};
 
 
 async function delete_booking(bookingIdPrice) {
@@ -175,8 +197,7 @@ async function delete_booking(bookingIdPrice) {
         removeFadeOut(document.getElementById(toBeDelete), 1000);
         window.location.replace("/booking");
 
-        // totalPrice-=bookingPrice;
-        // document.getElementById("total-price").innerText=`總價：新台幣 `+totalPrice+` 元`
+
 
     }
 }
@@ -190,6 +211,243 @@ function removeFadeOut(el, speed) {
     setTimeout(function () {
         el.parentNode.removeChild(el);
     }, speed);
+};
 
-
+function disableScrolling() {
+    var x = window.scrollX;
+    var y = window.scrollY;
+    window.onscroll = function () { window.scrollTo(x, y); };
 }
+
+
+function getContactFormData() {
+
+    const contactForm = document.getElementById("contact-form");
+    const contactFormData = new FormData(contactForm);
+    return {
+        name: contactFormData.get("name"),
+        email: contactFormData.get("email"),
+        phone_number: contactFormData.get("phone_number"),
+    };
+}
+
+
+async function createOrder({ prime, cardholder, totalPrice }) {
+
+    disableScrolling();
+    insertHTML = `  <div id="dimmed-background"><div id="loading"><h1>Loading...</h1></div></div>`;
+    document.body.insertAdjacentHTML("beforeend", insertHTML);
+    
+
+    const url = "/api/orders";
+    let data = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json ; charset=UTF-8'
+        },
+        body: JSON.stringify({
+            prime: prime,
+            cardholder: cardholder,
+            totalPrice: totalPrice
+        })
+    })
+        .then((response) => response.json())
+        .then((responseData) => {
+            console.log(responseData);
+            return responseData;
+        })
+        .catch(error => console.warn(error));
+
+
+
+
+
+    if (data.ok) {
+
+        window.location.href = `/thankyou?ordernumber=${data.orderNumber}`;
+
+        return
+    }
+
+};
+
+function addTapPayScript(callback) {
+    const script = document.createElement('script');
+
+    script.src = "https://js.tappaysdk.com/sdk/tpdirect/v5.14.0";
+    script.async = true;
+    script.addEventListener('load', callback);
+    document.body.appendChild(script);
+}
+
+
+//tapPay
+
+function setupSdk() {
+
+    if (window.TPDirect) {
+        console.log(window.TPDirect)
+        TPDirect.setupSDK(127032, "app_ZycZpLOlUsAmqOc38EQkggoaba7jcRx8aURxcWa2lGCPbbncjYnEkCZ0CuQ5", 'sandbox')
+    } else {
+        console.error("TPDirect_unload")
+    }
+}
+
+function setupCard() {
+    const fields = {
+        number: {
+            // css selector
+            element: '#card-number',
+            placeholder: '**** **** **** ****'
+        },
+        expirationDate: {
+            // DOM object
+            element: document.getElementById('card-expiration-date'),
+            placeholder: 'MM / YY'
+        },
+        ccv: {
+            element: '#card-ccv',
+            placeholder: 'ccv'
+        }
+    }
+
+    TPDirect.card.setup({
+        fields: fields,
+        styles: {
+            // Style all elements
+            'input': {
+                'color': 'gray',
+                "border-radius": "5px"
+            },
+            // Styling ccv field
+            'input.ccv': {
+                // 'font-size': '16px'
+            },
+            // Styling expiration-date field
+            'input.expiration-date': {
+                // 'font-size': '16px'
+            },
+            // Styling card-number field
+            'input.card-number': {
+                // 'font-size': '16px'
+            },
+            // style focus state
+            ':focus': {
+                // 'color': 'black'
+            },
+            // style valid state
+            '.valid': {
+                'color': 'green'
+            },
+            // style invalid state
+            '.invalid': {
+                'color': 'red'
+            },
+            // Media queries
+            // Note that these apply to the iframe, not the root window.
+            '@media screen and (max-width: 400px)': {
+                'input': {
+                    'color': 'orange'
+                }
+            }
+        },
+        // 此設定會顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
+        isMaskCreditCardNumber: true,
+        maskCreditCardNumberRange: {
+            beginIndex: 6,
+            endIndex: 11
+        }
+    })
+}
+
+//得知目前卡片資訊的輸入狀態
+function cardOnUpdate() {
+
+    const submitButton = document.getElementById("booking-button")
+    TPDirect.card.onUpdate(function (update) {
+        // update.canGetPrime === true
+        // --> you can call TPDirect.card.getPrime()
+        if (update.canGetPrime) {
+            // Enable submit Button to get prime.
+            submitButton.removeAttribute('disabled')
+        } else {
+            // Disable submit Button to get prime.
+            submitButton.setAttribute('disabled', true)
+        }
+
+        // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unionpay','unknown']
+        if (update.cardType === 'visa') {
+            // Handle card type visa.
+        }
+
+        // number 欄位是錯誤的
+        if (update.status.number === 2) {
+            // setNumberFormGroupToError()
+        } else if (update.status.number === 0) {
+            // setNumberFormGroupToSuccess()
+        } else {
+            // setNumberFormGroupToNormal()
+        }
+
+        if (update.status.expiry === 2) {
+            // setNumberFormGroupToError()
+        } else if (update.status.expiry === 0) {
+            // setNumberFormGroupToSuccess()
+        } else {
+            // setNumberFormGroupToNormal()
+        }
+
+        if (update.status.ccv === 2) {
+            // setNumberFormGroupToError()
+        } else if (update.status.ccv === 0) {
+            // setNumberFormGroupToSuccess()
+        } else {
+            // setNumberFormGroupToNormal()
+        }
+    })
+}
+
+function confirmButtonHandler() {
+    const submitButton = document.getElementById("booking-button")
+    const onSubmit = (event) => {
+
+        event.preventDefault()
+
+        // 取得 TapPay Fields 的 status
+        const tappayStatus = TPDirect.card.getTappayFieldsStatus()
+
+        // 確認是否可以 getPrime
+        if (tappayStatus.canGetPrime === false) {
+            console.log(tappayStatus)
+
+            alert('can not get prime')
+            return
+        }
+
+        // Get prime
+        TPDirect.card.getPrime((result) => {
+            if (result.status !== 0) {
+                alert('get prime error ' + result.msg)
+                return
+            }
+
+            const contactFormData = getContactFormData();
+            const totalPrice = document.getElementById("total-price").innerText;
+
+            console.log(result)
+            const payHolderData = {
+                prime: result.card.prime,
+                cardholder: contactFormData,
+                totalPrice: totalPrice
+            }
+
+            createOrder(payHolderData);
+
+            // send prime to your server, to pay with Pay by Prime API .
+            // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
+        })
+    }
+    submitButton.addEventListener("click", onSubmit)
+}
+
+

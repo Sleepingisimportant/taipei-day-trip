@@ -7,6 +7,8 @@ input {
     border-radius: 5px;
     width: 200px;
     height: 38px;
+    padding: 5px;
+
 }
 
 #main-content {
@@ -78,11 +80,25 @@ input {
 
 
 }
+#payment-section >*{
+    vertical-align:middle;  
+}
+ .tpfield{
+    display: inline-block;
+    margin: 10px 0 10px 0;
 
+    padding: 5px;
+    border: 1px solid #E8E8E8;
+    border-radius: 5px;
+    width: 200px;
+    height: 38px;
+
+}
 
 .section-title {
     margin-bottom: 20px;
 }
+
 
 
 #confirmation-section {

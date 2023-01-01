@@ -59,9 +59,9 @@ async function nav_to_booking(bookingID) {
   data = await api_get_user_auth();
 
   if (data['data'] == null) {
-      popup_user_login_box(toPageLocation='/booking');
+    popup_user_login_box(toPageLocation = '/booking');
   } else {
-   window.location.replace("/booking");
+    window.location.replace("/booking");
 
   }
 
@@ -72,6 +72,9 @@ document.addEventListener('click', (e) => {
     close_box();
   }
 });
+
+
+
 
 function close_box() {
   document.getElementById("dimmed-background").remove();
@@ -89,7 +92,7 @@ function enableScrolling() {
   window.onscroll = function () { };
 }
 
-function popup_user_login_box(toPageLocation="/") {
+function popup_user_login_box(toPageLocation = "/") {
 
   if (document.getElementById("dimmed-background")) {
     document.getElementById("dimmed-background").remove();
@@ -98,7 +101,7 @@ function popup_user_login_box(toPageLocation="/") {
   insertHTML = `  <div id="dimmed-background">
   <div id="login-registration-box">
   <div id="icon-close">&times;</div>
-    <form  onsubmit="user_login('`+toPageLocation+`');return false">
+    <form  onsubmit="user_login('`+ toPageLocation + `');return false">
       <h3>登入會員帳號</h3>
       <input type="text" class="body" name="email" id="login-registration-box-email" placeholder="輸入電子信箱" required><br>
       <input type="password" class="body" name="password" id="login-registration-box-password" placeholder="輸入密碼" required><br>
@@ -209,7 +212,7 @@ async function user_login(toPageLocation) {
     })
     .catch(error => console.warn(error));
 
-    console.log(data);
+  console.log(data);
 
   if (document.getElementById("login-registration-result-message")) {
     document.getElementById("login-registration-result-message").remove()

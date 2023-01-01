@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block cssFiles %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/booking.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% endblock %}
+
+
+{% block jsFiles %}
+
+{% endblock %}
+
+{% block mainContent %}
+<div id="main-content">
+    <h1 id="success-order-message"></h1>
+
+
+</div>
+
+<script>
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    document.getElementById("success-order-message").textContent = "付款已成功,訂單編號為:" + params.ordernumber.toString();
+</script>
+{% endblock %}
