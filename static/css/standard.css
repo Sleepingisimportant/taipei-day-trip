@@ -1,5 +1,19 @@
 @import url("style_guide.css");
 
+/* tappay */
+
+.tpfield {
+    /* height: 40px;
+    width: 300px;
+    border: 1px solid gray;
+    margin: 5px 0; */
+
+}
+
+
+
+/* website */
+
 html {
     font-size: 20px;
     font-family: 'Noto Sans TC', sans-serif;
@@ -12,7 +26,6 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 
 
 footer {
@@ -54,8 +67,6 @@ button {
     width: 154px;
     height: 36px;
     cursor: pointer;
-
-
 }
 
 
@@ -230,7 +241,7 @@ button {
     overflow-y: scroll;
 }
 
-#show-booking li{
+#show-booking li {
     list-style-type: none;
     margin: 10px 0;
 
@@ -242,6 +253,17 @@ button {
     color: #448899;
 }
 
+#loading{
+    width: 500px;
+    height: 500px;
+    background-color: transparent;
+    position: fixed;
+    left: 50%;
+    top: 100px;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    z-index: 3;
+}
 
 
 
