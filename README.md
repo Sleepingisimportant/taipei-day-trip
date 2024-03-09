@@ -8,7 +8,7 @@ Taipei-Day-Trip is a travel e-commerce platform tailored for Taipei, leveraging 
 - MVC (Model-View-Controller)
 - RESTful API
 - JWT (JSON Web Tokens) for user data storage
-- Bcrypt for secure password hashing
+- Encrypt for secure password hashing
 
 ## Cloud Services
 
